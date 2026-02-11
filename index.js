@@ -29,14 +29,11 @@ const missions = [
 "5호선 우진산전 탑승하기"
 ];
 
-// 닉네임 저장
-let userName = {};
-
 function getRandomMission() {
   return missions[Math.floor(Math.random() * missions.length)];
 }
 
-function missionResponse(name, missionText, failMessage = false) {
+function missionResponse(missionText, failMessage = false) {
 
   let text = "";
 
@@ -44,7 +41,7 @@ function missionResponse(name, missionText, failMessage = false) {
     text += "❌ 미션 실패!\n\n";
   }
 
-  text += `🚈 ${name}님의 랜덤 미션은\n\n👉 ${missionText}`;
+  text += `🚈 이번 지하철 랜덤 미션은\n\n👉 ${missionText}`;
 
   return {
     version: "2.0",
@@ -74,52 +71,16 @@ function missionResponse(name, missionText, failMessage = false) {
 
 app.post("/", (req, res) => {
 
-  const userId = req.body.userRequest.user.id;
   const utterance = req.body.userRequest.utterance;
 
-  // 1️⃣ 닉네임 등록
-if (utterance.includes("/등록")) {
-  const name = utterance.replace("/등록", "").trim();
-
-  if (!name) {
-    return res.json({
-      version: "2.0",
-      template: {
-        outputs: [
-          {
-            simpleText: {
-              text: "닉네임을 입력해주세요.\n예: /등록 홍길동"
-            }
-          }
-        ]
-      }
-    });
-  }
-
-  userName[userId] = name;
-
-  return res.json({
-    version: "2.0",
-    template: {
-      outputs: [
-        {
-          simpleText: {
-            text: `✅ ${name}님으로 등록되었습니다!`
-          }
-        }
-      ]
-    }
-  });
-}
-
-  // 2️⃣ 미션 요청
+  // 1️⃣ 미션 요청
   if (utterance === "미션") {
     return res.json(
-      missionResponse(name, getRandomMission())
+      missionResponse(getRandomMission())
     );
   }
 
-  // 3️⃣ 완료 버튼 (재추첨 없음)
+  // 2️⃣ 완료 (재추첨 없음)
   if (utterance === "완료") {
     return res.json({
       version: "2.0",
@@ -135,10 +96,10 @@ if (utterance.includes("/등록")) {
     });
   }
 
-  // 4️⃣ 패스 버튼 → 실패 후 새 미션
+  // 3️⃣ 패스 → 실패 후 새 미션
   if (utterance === "패스") {
     return res.json(
-      missionResponse(name, getRandomMission(), true)
+      missionResponse(getRandomMission(), true)
     );
   }
 
@@ -149,7 +110,7 @@ if (utterance.includes("/등록")) {
       outputs: [
         {
           simpleText: {
-            text: "명령어:\n/등록 닉네임\n미션"
+            text: "명령어:\n미션"
           }
         }
       ]
