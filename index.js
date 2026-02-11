@@ -78,17 +78,17 @@ app.post("/", (req, res) => {
   const utterance = req.body.userRequest.utterance;
 
   // 1️⃣ 닉네임 등록
-  if (utterance.startsWith("/등록")) {
-    const name = utterance.replace("/등록", "").trim();
-    userName[userId] = name;
+if (utterance.includes("/등록")) {
+  const name = utterance.replace("/등록", "").trim();
 
+  if (!name) {
     return res.json({
       version: "2.0",
       template: {
         outputs: [
           {
             simpleText: {
-              text: `✅ ${name}님으로 등록되었습니다!`
+              text: "닉네임을 입력해주세요.\n예: /등록 홍길동"
             }
           }
         ]
@@ -96,7 +96,21 @@ app.post("/", (req, res) => {
     });
   }
 
-  const name = userName[userId] || "사용자";
+  userName[userId] = name;
+
+  return res.json({
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          simpleText: {
+            text: `✅ ${name}님으로 등록되었습니다!`
+          }
+        }
+      ]
+    }
+  });
+}
 
   // 2️⃣ 미션 요청
   if (utterance === "미션") {
