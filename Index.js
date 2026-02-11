@@ -38,7 +38,7 @@ app.post("/", (req, res) => {
       outputs: [
         {
           simpleText: {
-            text: "🎯 오늘의 랜덤 미션\n\n" + randomMission
+            text: "지하철 랜덤 미션\n\n" + randomMission
           }
         }
       ]
