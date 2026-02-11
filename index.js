@@ -1,4 +1,4 @@
-const express = require("express");
+  const express = require("express");
 const app = express();
 
 app.use(express.json());
@@ -29,56 +29,24 @@ const missions = [
 "5호선 우진산전 탑승하기"
 ];
 
-function getRandomMission() {
-  return missions[Math.floor(Math.random() * missions.length)];
-}
+app.post("/", (req, res) => {
+  const randomMission = missions[Math.floor(Math.random() * missions.length)];
 
-function missionResponse(missionText, failMessage = false) {
-
-  let text = "";
-
-  if (failMessage) {
-    text += "❌ 미션 실패!\n\n";
-  }
-
-  text += `🚈 이번 지하철 랜덤 미션은\n\n👉 ${missionText}`;
-
-  return {
+  res.json({
     version: "2.0",
     template: {
       outputs: [
         {
           simpleText: {
-            text: text
+            text: "🚈이번 랜덤 미션\n\n" + randomMission
           }
-        }
-      ],
-      quickReplies: [
-        {
-          label: "✅ 미션 완료",
-          action: "message",
-          messageText: "완료"
-        },
-        {
-          label: "❌ 패스",
-          action: "message",
-          messageText: "패스"
         }
       ]
     }
-  };
-}
+  });
+});
 
-app.post("/", (req, res) => {
-
-  const utterance = req.body.userRequest.utterance;
-
-  // 1️⃣ 미션 요청
-  if (utterance === "미션") {
-    return res.json(
-      missionResponse(getRandomMission())
-    );
-  }
+app.listen(process.env.PORT || 3000);
 
   // 2️⃣ 완료 (재추첨 없음)
   if (utterance === "완료") {
