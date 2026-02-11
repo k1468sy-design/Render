@@ -48,34 +48,4 @@ app.post("/", (req, res) => {
 
 app.listen(process.env.PORT || 3000);
 
-  // 2️⃣ 완료 (재추첨 없음)
-  if (utterance === "완료") {
-    return res.json({
-      version: "2.0",
-      template: {
-        outputs: [
-          {
-            simpleText: {
-              text: "🔥 미션 성공! 수고하셨습니다!"
-            }
-          }
-        ]
-      }
-    });
-  }
-
-  // 3️⃣ 패스 → 실패 후 새 미션
-  if (utterance === "패스") {
-    return res.json(
-      missionResponse(getRandomMission(), true)
-    );
-  }
-
   
-
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
