@@ -103,19 +103,7 @@ app.post("/", (req, res) => {
     );
   }
 
-  // 기본 안내
-  return res.json({
-    version: "2.0",
-    template: {
-      outputs: [
-        {
-          simpleText: {
-            text: "명령어:\n미션"
-          }
-        }
-      ]
-    }
-  });
+  
 
 });
 
